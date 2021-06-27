@@ -78,7 +78,7 @@ function Item(props) {
         
         <Button
           type="primary"
-          onClick={() => { history.push(`/toDoList/${toDoListItem.id}`) }}
+          onClick={() => { history.push(`/toDoList/${toDoListId}`) }}
         >
           Detail
         </Button>
@@ -122,7 +122,7 @@ function Item(props) {
                 >
                   Edit
                 </Button>
-                <Button danger onClick={() => handleDeleteToDoList(toDoListId, toDoListIndex)}>Delete</Button>
+                <Button danger onClick={() => handleDeleteToDoList(toDoListId)}>Delete</Button>
               </>
             )
           }

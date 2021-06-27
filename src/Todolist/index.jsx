@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Card, Form, Input, Button } from 'antd';
+import { Row, Col, Card, Form, Input, Button, notification } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
 import { ROUTERS } from '../constants/router';
@@ -17,7 +18,7 @@ function ToDoListPage(props) {
   const [productForm] = Form.useForm();
 
   const [searchKey, setSearchKey] = useState("");
-  
+
 
   const {
     getToDoList,
@@ -34,19 +35,37 @@ function ToDoListPage(props) {
     getToDoList({ searchKey: searchKey });
   }, [searchKey])
 
+  const openNotificationUpdate = () => {
+    notification.open({
+      message: 'Thêm thành công!',
+      icon: <SmileOutlined  style={{ color: 'Green' }} />,
+    });
+  };
+
+  const deleteNotificationUpdate = () => {
+    notification.open({
+      message: 'Xóa thành công!',
+      icon: <SmileOutlined  style={{ color: '#a8071a' }} />,
+    });
+  };
+
 
   function handleAddToDoList() {
     const values = productForm.getFieldsValue();
-    addToDoList(values)
+    addToDoList(values);
+
+    openNotificationUpdate()
+
   }
 
-  function handleDeleteToDoList(toDoListId, toDoListIndex) {
-    // const newToDoList = toDoList.data;
-    // newToDoList.splice(toDoListIndex, 1)
+  function handleDeleteToDoList(toDoListId) {
+
     deleteToDoList({
       id: parseInt(toDoListId),
+    });
 
-    })
+    deleteNotificationUpdate()
+
   }
 
   function renderToDoList() {
@@ -54,6 +73,7 @@ function ToDoListPage(props) {
       return (
         <Item
           toDoListItem={toDoListItem}
+          toDoListId={toDoListItem.id}
           toDoListIndex={toDoListIndex}
           handleDeleteToDoList={handleDeleteToDoList}
         />

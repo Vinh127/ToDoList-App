@@ -1,5 +1,7 @@
 export const ROUTERS = {
 
-  toDoList : '/ToDoList'
+  TODOLIST : '/toDoList',
+
+  TODOLIST_DETAIL: '/toDoList/:id'
 
 }

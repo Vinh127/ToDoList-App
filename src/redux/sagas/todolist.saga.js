@@ -35,20 +35,18 @@ function* addToDoListSaga(action) {
 
 function* getToDoListSaga(action) {
   try {
-    const { productId } = action.payload
+    const searchKey = action.payload?.searchKey
     const result = yield axios({
       method: 'GET',
       url: `http://localhost:3001/toDoList`,
-      // params: {
-      //   productId: productId,
-      //   _sort: "id",
-      //   _order: "desc"
-      // }
+      params: {
+        ...searchKey && { q: searchKey }
+      }
     });
     yield put({
       type: 'GET_TODOLIST_SUCCESS',
       payload: {
-        data: result.data
+        data: result.data,
       },
     });
   } catch (e) {
@@ -61,10 +59,34 @@ function* getToDoListSaga(action) {
   }
 }
 
+function* getToDoListDetailSaga(action) {
+  try {
+    const {id} = action.payload;
+    const result = yield axios({
+      method: 'GET',
+      url: `http://localhost:3001/toDoList/${id}`,
+    });
+    console.log("🚀 ~ file: todolist.saga.js ~ line 69 ~ function*getToDoListDetailSaga ~ result", result)
+    yield put({
+      type: 'GET_TODOLIST_DETAIL_SUCCESS',
+      payload: {
+        data: result.data
+      }
+    })
+  } catch (e) {
+    yield put({
+      type: 'GET_TODOLIST_DETAIL_FAIL',
+      payload: {
+        error: e.error
+      },
+    });
+  }
+}
+
 // Delete ToDoList
 function* deleteToDoListSaga(action) {
   try {
-    const {id } = action.payload;
+    const { id } = action.payload;
     console.log("🚀 ~ file: todolist.saga.js ~ line 68 ~ function*deleteToDoListSaga ~ action.payload", action.payload)
     const result = yield axios({
       method: 'DELETE',
@@ -75,7 +97,7 @@ function* deleteToDoListSaga(action) {
     yield put({
       type: 'DELETE_TODOLIST_SUCCESS',
       payload: {
-        id:id
+        id: id
       }
     });
   } catch (e) {
@@ -91,22 +113,21 @@ function* deleteToDoListSaga(action) {
 
 function* editToDoListSaga(action) {
   try {
-    const { id,title, description} = action.payload;
+    const { id, title, description } = action.payload;
     const editResult = yield axios({
       method: 'PATCH',
       url: `http://localhost:3001/toDoList/${id}`,
       data: {
-        title:title,
-        description:description
+        title: title,
+        description: description
       }
     });
-    console.log("🚀 ~ file: todolist.saga.js ~ line 103 ~ function*editToDoListSaga ~ editResult", editResult)
-    yield put({ type: 'GET_TODOLIST_REQUEST'});
+    yield put({ type: 'GET_TODOLIST_REQUEST' });
     yield put({
       type: 'EDIT_TODOLIST_SUCCESS',
       payload: {
         data: editResult.data,
-        id:id
+        id: id
       },
     });
   } catch (e) {
@@ -128,5 +149,7 @@ export default function* toDoListSaga() {
 
   yield takeEvery('DELETE_TODOLIST_REQUEST', deleteToDoListSaga);
 
-  yield takeEvery('EDIT_TODOLIST_REQUEST',editToDoListSaga)
+  yield takeEvery('EDIT_TODOLIST_REQUEST', editToDoListSaga);
+
+  yield takeEvery('GET_TODOLIST_DETAIL_REQUEST', getToDoListDetailSaga);
 }

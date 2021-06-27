@@ -18,7 +18,7 @@ function Item(props) {
 
 
   const [isEdit, setIsEdit] = useState(false);
-  const [isShowDescription, setIsShowDescription] = useState(false);
+  const [isShowDescription, setIsShowDescription] = useState(true);
   const [editForm] = Form.useForm();
 
   function handleEditToDoList() {
@@ -35,8 +35,12 @@ function Item(props) {
       <Row>
         <Col span={8}>Title:</Col>
         <Col span={16}>{toDoListItem.title}</Col>
-        <Col span={8}>Description:</Col>
-        <Col span={16}>{toDoListItem.description}</Col>
+        {isShowDescription &&
+          <>
+            <Col span={8}>Description:</Col>
+            <Col span={16}>{toDoListItem.description}</Col>
+          </>
+        }
       </Row>
     )
   }
@@ -71,21 +75,35 @@ function Item(props) {
   return (
     <Card size="small" style={{ marginTop: 16 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+        
+        <Button
+          type="primary"
+          onClick={() => { history.push(`/toDoList/${toDoListItem.id}`) }}
+        >
+          Detail
+        </Button>
 
         <Space>
           {isEdit
             ? (
               <>
-                <Button
-                  type="primary"
-                  onClick={() => handleEditToDoList()}
-                >
-                  Confirm
-                </Button>
+                <Row justify="end" align="center">
+                  <Space>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        handleEditToDoList();
+                        setIsEdit(false)
+                      }}
+                    >
+                      Confirm
+                    </Button>
+                  </Space>
 
-                <Button onClick={() => setIsEdit(false)}>
-                  Cancel
-                </Button>
+                  <Button onClick={() => setIsEdit(false)}>
+                    Cancel
+                  </Button>
+                </Row>
               </>
             )
             : (
@@ -95,7 +113,7 @@ function Item(props) {
                   ghost
                   onClick={() => setIsShowDescription(!isShowDescription)}
                 >
-                  {isShowDescription ? 'Hide' : 'Show'}
+                  {isShowDescription ? 'Show' : 'Hide'}
                 </Button>
                 <Button
                   type="primary"
@@ -104,7 +122,7 @@ function Item(props) {
                 >
                   Edit
                 </Button>
-                <Button danger onClick={() => handleDeleteToDoList(toDoListId,toDoListIndex)}>Delete</Button>
+                <Button danger onClick={() => handleDeleteToDoList(toDoListId, toDoListIndex)}>Delete</Button>
               </>
             )
           }
@@ -116,13 +134,6 @@ function Item(props) {
   );
 
 }
-
-// const mapStateToProps = (state) => {
-//   const { toDoList } = state.toDoListReducer;
-//   return {
-//     toDoList: toDoList,
-//   }
-// };
 
 const mapDispatchToProps = (dispatch) => {
   return {

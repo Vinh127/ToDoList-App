@@ -4,7 +4,8 @@ import history from './utils/history';
 import { ROUTERS } from './constants/router'
 
 
-import ToDoListPage from './Todolist/index'
+import ToDoListPage from './Todolist/index';
+import ToDoListDetailPage from './TodolistDetail'
 
 function BrowserRouter(props) {
   return (
@@ -12,8 +13,14 @@ function BrowserRouter(props) {
       <Switch>
         <Route
           exact
-          path={ROUTERS.toDoList}
+          path={ROUTERS.TODOLIST}
           component={ToDoListPage}
+        />
+
+        <Route
+          exact
+          path={ROUTERS.TODOLIST_DETAIL}
+          component={ToDoListDetailPage}
         />
       </Switch>
     </Router>

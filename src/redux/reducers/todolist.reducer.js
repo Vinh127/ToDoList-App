@@ -4,6 +4,11 @@ const initialState = {
     load: false,
     error: '',
   },
+  toDoListDetail: {
+    data:[],
+    load:false,
+    error:'',
+  }
 }
 
 export default function toDoListReducer(state = initialState, action) {
@@ -77,6 +82,43 @@ export default function toDoListReducer(state = initialState, action) {
         },
       }
     }
+
+    // Get ToDoList detail
+
+    case 'GET_TODOLIST_DETAIL_REQUEST': {
+      return {
+        ...state,
+        toDoListDetail: {
+          ...state.toDoListDetail,
+          load: true,
+        },
+      }
+    }
+    case 'GET_TODOLIST_DETAIL_SUCCESS': {
+      const { data } = action.payload;
+      console.log("🚀 ~ file: todolist.reducer.js ~ line 99 ~ toDoListReducer ~ data", data)
+      return {
+        ...state,
+        toDoListDetail: {
+          ...state.toDoListDetail,
+          data: data,
+          load: false,
+        },
+      }
+    }
+    case 'GET_TODOLIST_DETAIL_FAIL': {
+      const { error } = action.payload;
+      return {
+        ...state,
+        toDoListDetail: {
+          ...state.toDoListDetail,
+          load: false,
+          error: error,
+        },
+      }
+    }
+
+
 
     // Delete ToDoList
     case 'DELETE_TODOLIST_REQUEST': {

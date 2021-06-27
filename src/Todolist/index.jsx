@@ -16,17 +16,23 @@ function ToDoListPage(props) {
 
   const [productForm] = Form.useForm();
 
+  const [searchKey, setSearchKey] = useState("");
+  
+
   const {
     getToDoList,
     addToDoList,
     toDoList,
     deleteToDoList
   } = props;
-  console.log("🚀 ~ file: index.jsx ~ line 25 ~ ToDoListPage ~ toDoList", toDoList)
 
   useEffect(() => {
     getToDoList();
   }, []);
+
+  useEffect(() => {
+    getToDoList({ searchKey: searchKey });
+  }, [searchKey])
 
 
   function handleAddToDoList() {
@@ -34,12 +40,12 @@ function ToDoListPage(props) {
     addToDoList(values)
   }
 
-  function handleDeleteToDoList(toDoListId,toDoListIndex) {
+  function handleDeleteToDoList(toDoListId, toDoListIndex) {
     // const newToDoList = toDoList.data;
     // newToDoList.splice(toDoListIndex, 1)
     deleteToDoList({
       id: parseInt(toDoListId),
-      
+
     })
   }
 
@@ -48,7 +54,6 @@ function ToDoListPage(props) {
       return (
         <Item
           toDoListItem={toDoListItem}
-          toDoListId={toDoListItem.id}
           toDoListIndex={toDoListIndex}
           handleDeleteToDoList={handleDeleteToDoList}
         />
@@ -59,7 +64,7 @@ function ToDoListPage(props) {
 
   return (
     <Row gutter={24} style={{ maxWidth: 1000, width: '100%', margin: '16px auto 0' }}>
-      <Col span={8}>
+      <Col span={10}>
         <Card title="Add task" size="small">
           <Form
             form={productForm}
@@ -109,15 +114,15 @@ function ToDoListPage(props) {
 
           {/* <Row >
             <Col> */}
-          <Button onClick={() => handleAddToDoList()}>Add</Button>
+          <Button type="primary" block onClick={() => handleAddToDoList()}>Add</Button>
           {/* </Col>
           </Row> */}
         </Card>
       </Col>
 
-      <Col span={16}>
+      <Col span={14}>
         <Input.Search
-          // onChange={(e) => setSearchKey(e.target.value)}
+          onChange={(e) => setSearchKey(e.target.value)}
           placeholder="Search..."
         />
         {renderToDoList()}
